@@ -35,7 +35,7 @@ class KotlinLanguageServer(
 
     private val textDocuments = KotlinTextDocumentService(sourceFiles, sourcePath, config, tempDirectory, uriContentProvider, classPath)
     private val workspaces = KotlinWorkspaceService(sourceFiles, sourcePath, classPath, textDocuments, config)
-    private val protocolExtensions = KotlinProtocolExtensionService(uriContentProvider, classPath, sourcePath)
+    private val protocolExtensions = KotlinProtocolExtensionService(uriContentProvider, classPath, sourcePath, databaseService)
 
     private lateinit var client: LanguageClient
 
@@ -60,6 +60,7 @@ class KotlinLanguageServer(
 
         workspaces.connect(client)
         textDocuments.connect(client)
+        protocolExtensions.connect(client)
 
         LOG.info("Connected to client")
     }

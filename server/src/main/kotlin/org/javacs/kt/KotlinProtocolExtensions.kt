@@ -18,4 +18,7 @@ interface KotlinProtocolExtensions {
 
     @JsonRequest
     fun overrideMember(position: TextDocumentPositionParams): CompletableFuture<List<CodeAction>>
+
+    @JsonRequest
+    fun cleanWorkspaceDb(): CompletableFuture<String?>
 }

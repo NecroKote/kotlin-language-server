@@ -33,6 +33,8 @@ class DatabaseService {
     var db: Database? = null
         private set
 
+    private var currentStoragePath: Path? = null
+
     fun setup(storagePath: Path?) {
         db = getDbFromFile(storagePath)
 
@@ -56,6 +58,23 @@ class DatabaseService {
             }
         } else {
             LOG.info("Database has the correct version $currentVersion and will be used as-is")
+        }
+        currentStoragePath = storagePath
+    }
+
+    fun clear(recreate: Boolean = true) {
+        var usedPath: Path? = null
+        currentStoragePath?.let {
+            synchronized(it) {
+                usedPath = it
+                deleteDb(it)
+                currentStoragePath = null
+                LOG.info("Database cleared")
+            }
+        }
+
+        usedPath?.takeIf { recreate }?.also {
+            setup(it)
         }
     }
 
